@@ -90,17 +90,19 @@ struct MainView: View {
 
     private var resolutionRow: some View {
         HStack(spacing: 8) {
-            Text("送出解析度").font(.caption2)
+            Text("送出解析度").font(.caption2).foregroundStyle(.white)
             TextField("寬", value: $vm.config.width, format: .number)
                 .keyboardType(.numberPad)
                 .textFieldStyle(.roundedBorder)
-                .frame(width: 66)
+                .foregroundStyle(.black)
+                .frame(width: 70)
                 .focused($resFocused)
-            Text("×")
+            Text("×").foregroundStyle(.white)
             TextField("高", value: $vm.config.height, format: .number)
                 .keyboardType(.numberPad)
                 .textFieldStyle(.roundedBorder)
-                .frame(width: 66)
+                .foregroundStyle(.black)
+                .frame(width: 70)
                 .focused($resFocused)
             Button("套用") { resFocused = false; vm.applyResolution() }
                 .buttonStyle(.borderedProminent)
@@ -108,7 +110,6 @@ struct MainView: View {
             Spacer()
         }
         .font(.caption2.monospaced())
-        .foregroundStyle(.white)
         .padding(8)
         .background(.black.opacity(0.45), in: RoundedRectangle(cornerRadius: 8))
     }
