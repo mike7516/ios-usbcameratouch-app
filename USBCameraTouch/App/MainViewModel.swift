@@ -70,6 +70,7 @@ final class MainViewModel: ObservableObject {
 
     func startStreaming() {
         guard cameraAuthorized else { return }
+        RuntimeBridge.writeConfig(config)   // share resolution with screen-broadcast extension
         sender.start(config: config)
         isStreaming = true
     }
@@ -77,6 +78,18 @@ final class MainViewModel: ObservableObject {
     func stopStreaming() {
         sender.stop()
         isStreaming = false
+    }
+
+    /// Apply the resolution typed in the UI. Persists to App Group (so the screen
+    /// broadcast extension uses it too) and restarts the camera stream if running.
+    func applyResolution() {
+        config.width = max(16, config.width)
+        config.height = max(16, config.height)
+        RuntimeBridge.writeConfig(config)
+        if isStreaming {
+            sender.stop()
+            sender.start(config: config)
+        }
     }
 
     func toggleCamera() {

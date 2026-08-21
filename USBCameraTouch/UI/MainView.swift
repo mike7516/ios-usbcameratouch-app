@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var vm = MainViewModel()
+    @FocusState private var resFocused: Bool
 
     var body: some View {
         ZStack {
@@ -27,11 +28,18 @@ struct MainView: View {
             VStack {
                 statusBar
                 Spacer()
+                resolutionRow
                 controls
             }
             .padding()
         }
         .onAppear { vm.onAppear() }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("完成") { resFocused = false }
+            }
+        }
     }
 
     private var statusBar: some View {
@@ -78,6 +86,31 @@ struct MainView: View {
         .foregroundStyle(.white)
         .padding(10)
         .background(.black.opacity(0.45), in: RoundedRectangle(cornerRadius: 10))
+    }
+
+    private var resolutionRow: some View {
+        HStack(spacing: 8) {
+            Text("送出解析度").font(.caption2)
+            TextField("寬", value: $vm.config.width, format: .number)
+                .keyboardType(.numberPad)
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 66)
+                .focused($resFocused)
+            Text("×")
+            TextField("高", value: $vm.config.height, format: .number)
+                .keyboardType(.numberPad)
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 66)
+                .focused($resFocused)
+            Button("套用") { resFocused = false; vm.applyResolution() }
+                .buttonStyle(.borderedProminent)
+                .tint(.blue)
+            Spacer()
+        }
+        .font(.caption2.monospaced())
+        .foregroundStyle(.white)
+        .padding(8)
+        .background(.black.opacity(0.45), in: RoundedRectangle(cornerRadius: 8))
     }
 
     private var controls: some View {
